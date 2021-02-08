@@ -1,7 +1,10 @@
-<?php get_header(); ?>
+<?php get_header(); ?> <!-- Imports the Header component -->
 
 <div class="page-banner">
-    <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri('/images/library-hero.jpg') ?>);"></div>
+    <div
+        class="page-banner__bg-image"
+        style="background-image: url(<?php echo get_theme_file_uri('/images/library-hero.jpg'); ?>);"> <!-- Imports image from the images folder -->
+    </div>
         <div class="page-banner__content container t-center c-white">
             <h1 class="headline headline--large">Welcome!</h1>
             <h2 class="headline headline--medium">We think you&rsquo;ll like it here.</h2>
@@ -16,37 +19,43 @@
                 <h2 class="headline headline--small-plus t-center">Upcoming Events</h2>
 
                 <?php
-                    $homepageEvents = new WP_Query(array(
-                        'posts_per_page' => 2,
-                        'post_type' => 'event'
+                    //Custom Queries
+                    $homepageEvents = new WP_Query(array( //Creates a new variable that holds all custom queries to WordPress
+                        'posts_per_page' => -1, //Determines how many posts to query. If set to -1, shows all posts
+                        'post_type' => 'event', //Determines what kind of post to query
+                        'meta_key' => 'event_date', //Targets the custom field of 'event_date'
+                        'orderby' => 'meta_value_num', //Determines what value to order by
+                        'order' => 'ASC' //Determines how to order the values
                     ));
 
-                    while ($homepageEvents->have_posts()) {
-                        $homepageEvents->the_post(); ?>
+                    while ($homepageEvents->have_posts()) { //While there are posts -->
+                        $homepageEvents->the_post(); ?> <!-- digs into the custom queries and gets the information for every post -->
 
                         <div class="event-summary">
                             <a class="event-summary__date t-center" href="#">
                                 <span class="event-summary__month">
                                     <?php
-                                        $eventDate = new DateTime(get_field('event_date'));
-                                         echo $eventDate->format('M');
+                                        $eventDate = new DateTime(get_field('event_date')); //Creates a new variable that stores the date from the custom field 'event_date' ('get_date' is associated with the 'Advanced Custom Fields' Plugin).
+                                         echo $eventDate->format('M'); //digs into the eventDate variable and Displays the month (3 letter abbreviation)
                                     ?>
                                 </span>
                                 <span class="event-summary__day">
-                                    <?php echo $eventDate->format('d'); ?>
+                                    <?php
+                                        echo $eventDate->format('d'); //digs into the eventDate variable and Displays the day (numeric)
+                                    ?>
                                 </span>
                             </a>
                             <div class="event-summary__content">
                                 <h5 class="event-summary__title headline headline--tiny"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h5>
                                 <p>
                                     <?php
-                                        if (has_excerpt()) {
-                                            echo get_the_excerpt();
+                                        if (has_excerpt()) { //If there are excerpts -->
+                                            echo get_the_excerpt(); //Display the excerpt
                                         } else {
-                                            echo wp_trim_words(get_the_content(), 18);
+                                            echo wp_trim_words(get_the_content(), 18); //Otherwise, Display the post's content and limit it to the first 18 characters
                                         }
                                     ?>
-                                    <a href="<?php the_permalink(); ?>" class="nu gray">Learn more</a>
+                                    <a href="<?php the_permalink(); ?>" class="nu gray">Learn more</a> <!-- Links to the specific post's page with permalink -->
                                 </p>
                             </div>
                         </div>
@@ -56,12 +65,12 @@
                     }
                 ?>
 
-                
-
                 <p class="t-center no-margin">
-                    <a href="<?php echo get_post_type_archive_link('event'); ?>" class="btn btn--blue">View All Events</a>
+                    <a
+                        href="<?php echo get_post_type_archive_link('event'); ?>" class="btn btn--blue"> <!-- gets the link to the archive of the post type and sets it as the href value -->
+                            View All Events
+                    </a>
                 </p>
-            
             </div>
         </div>
 
@@ -70,38 +79,44 @@
                 <h2 class="headline headline--small-plus t-center">From Our Blogs</h2>
                 
                 <?php
-                    $homepagePosts = new WP_Query(array(
-                        'posts_per_page' => 2
+                    $homepagePosts = new WP_Query(array( // Creates a new variable containing a custom query
+                        'posts_per_page' => 2 // Limits posts displayed onto the page to 2
                     ));
 
-                    while($homepagePosts->have_posts()){
-                        $homepagePosts->the_post(); ?>
+                    while($homepagePosts->have_posts()){ // While there are posts -->
+                        $homepagePosts->the_post(); ?> <!-- Creates a variable that contains the info for each individual post -->
 
                         <div class="event-summary">
-                            <a class="event-summary__date event-summary__date--beige t-center" href="<?php the_permalink(); ?>">
-                                <span class="event-summary__month"><?php the_time('M') ?></span>
-                                <span class="event-summary__day"><?php the_time('d') ?></span>
+                            <a class="event-summary__date event-summary__date--beige t-center" href="<?php the_permalink(); ?>"> <!-- Creates a link to the specific post -->
+                                <span class="event-summary__month"><?php the_time('M') ?></span> <!-- Displays the month (3 letter abbreviation) that the post was created -->
+                                <span class="event-summary__day"><?php the_time('d') ?></span> <!-- Displays the day (numeric) that the post was created -->
                             </a>
                             <div class="event-summary__content">
-                                <h5 class="event-summary__title headline headline--tiny"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h5>
+                                <h5 class="event-summary__title headline headline--tiny">
+                                    <a href="<?php the_permalink(); ?>"> <!-- Sets the link destination to the post's page -->
+                                        <?php the_title(); ?> <!-- displays the title of the post -->
+                                    </a>
+                                </h5>
                                 <p>
                                     <?php
-                                        if (has_excerpt()) {
-                                            echo get_the_excerpt();
-                                        } else {
-                                            echo wp_trim_words(get_the_content(), 18);
+                                        if (has_excerpt()) { // If there is an excerpt...
+                                            echo get_the_excerpt(); // Display the excerpt
+                                        } else { // Otherwise...
+                                            echo wp_trim_words(get_the_content(), 18); // Display the post's content and limit it to the first 18 characters
                                         }
                                     ?>
-                                    <a href="<?php the_permalink(); ?>" class="nu gray">Read more</a>
+                                    <a href="<?php the_permalink(); ?>" class="nu gray">Read more</a> <!-- Sets the link to the post's page -->
                                 </p>
                             </div>
                         </div>
 
-                    <?php } wp_reset_postdata();
+                    <?php } wp_reset_postdata(); // *IMPORTANT* Resets the post data to start fresh on next loop run-through
                 ?>
 
                 <p class="t-center no-margin">
-                    <a href="<?php echo site_url('/blog'); ?>" class="btn btn--yellow">View All Blog Posts</a>
+                    <a href="<?php echo site_url('/blog'); ?>" class="btn btn--yellow"> <!-- Navigates to the /blog address to view all blog posts -->
+                        View All Blog Posts
+                    </a>
                 </p>
 
             </div>
@@ -151,4 +166,4 @@
         </div>
     </div>
 
-<?php get_footer(); ?>
+<?php get_footer(); ?> <!-- Imports the footer component -->
