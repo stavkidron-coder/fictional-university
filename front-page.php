@@ -20,12 +20,22 @@
 
                 <?php
                     //Custom Queries
-                    $homepageEvents = new WP_Query(array( //Creates a new variable that holds all custom queries to WordPress
-                        'posts_per_page' => -1, //Determines how many posts to query. If set to -1, shows all posts
-                        'post_type' => 'event', //Determines what kind of post to query
-                        'meta_key' => 'event_date', //Targets the custom field of 'event_date'
-                        'orderby' => 'meta_value_num', //Determines what value to order by
-                        'order' => 'ASC' //Determines how to order the values
+                    $today = date('Ymd'); // Creates a variable that contains the current date
+                    $homepageEvents = new WP_Query(array( // Creates a new variable that holds all custom queries to WordPress
+                        'posts_per_page' => -1, // Determines how many posts to query. If set to -1, shows all posts
+                        'post_type' => 'event', // Determines what kind of post to query
+                        'meta_key' => 'event_date', // Targets the custom field of 'event_date'
+                        'orderby' => 'meta_value_num', // Determines what value to order by (In this case, the numeric value of meta_key)
+                        'order' => 'ASC', // Determines how to order the values
+                        'meta_query' => array( // only displays specific items from custom fields
+                            array( // each custom field needs an array of its own
+                                // Only show the event if...
+                                'key' => 'event_date', // ... the custom field...
+                                'compare' => '>=', // ... Is greater than or equal to...
+                                'value' => $today, // ... The current date
+                                'type' => 'numeric' // Tells WordPress what kind of values it should look for
+                            )
+                        )
                     ));
 
                     while ($homepageEvents->have_posts()) { //While there are posts -->
