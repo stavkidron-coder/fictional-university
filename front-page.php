@@ -22,7 +22,7 @@
                     //Custom Queries
                     $today = date('Ymd'); // Creates a variable that contains the current date
                     $homepageEvents = new WP_Query(array( // Creates a new variable that holds all custom queries to WordPress
-                        'posts_per_page' => -1, // Determines how many posts to query. If set to -1, shows all posts
+                        'posts_per_page' => 2, // Determines how many posts to query. If set to -1, shows all posts
                         'post_type' => 'event', // Determines what kind of post to query
                         'meta_key' => 'event_date', // Targets the custom field of 'event_date'
                         'orderby' => 'meta_value_num', // Determines what value to order by (In this case, the numeric value of meta_key)

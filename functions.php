@@ -23,3 +23,23 @@
     }
 
     add_action('after_setup_theme', 'university_features');
+
+    function university_adjust_queries($query){
+        if (!is_admin() AND is_post_type_archive('event') AND $query->is_main_query()) { // If not on the admin page but are on the event archive page and using the default url based query then...
+            $today = date('Ymd'); // Creates a variable that contains the current date
+            $query->set('meta_key', 'event_date'); // set the query argument to the meta_key of event_date
+            $query->set('orderby', 'meta_value_num'); // set the query argument of orderby to meta_value_num
+            $query->set('order', 'ASC');
+            $query->set('meta_query', array(
+                array( // each custom field needs an array of its own
+                    // Only show the event if...
+                    'key' => 'event_date', // ... the custom field...
+                    'compare' => '>=', // ... Is greater than or equal to...
+                    'value' => $today, // ... The current date
+                    'type' => 'numeric' // Tells WordPress what kind of values it should look for
+                )
+            ));
+        }
+    }
+    
+    add_action('pre_get_posts', 'university_adjust_queries');
